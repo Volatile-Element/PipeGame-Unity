@@ -33,10 +33,12 @@ public class GridManager : MonoBehaviour {
     //Has all the data about the tile on it
     TileInteraction activeTileInteraction;
 
+    public int boardSize = 10;
+
 	void Start () {
         spriteSize = ((float)tileSprites[0].texture.width/100f);
         //Sample function call
-        GenerateNewGrid(10);
+        GenerateNewGrid(boardSize);
 	}
 	
 	void Update () {
