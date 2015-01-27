@@ -69,12 +69,12 @@ public class TileInteraction : MonoBehaviour {
 
 	void Update () {
 
-        if (runOnce == false)
-        {
+        //if (runOnce == false)
+       // {
             
 
-            runOnce = true;
-        }
+        //    runOnce = true;
+        //}
 	
 	}
 
@@ -104,7 +104,7 @@ public class TileInteraction : MonoBehaviour {
             }
         }
         //Rotates the tile 90 degrees
-        gameObject.transform.Rotate(new Vector3(0, 0, 90));
+        gameObject.transform.Rotate(new Vector3(0, 0, -90));
 
         // Updates this tiles available sides
         updateSides();
