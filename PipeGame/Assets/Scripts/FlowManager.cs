@@ -42,9 +42,9 @@ public class FlowManager : MonoBehaviour {
                 break;
         }
 
-        for (int i = 0; i < tile.in_Out.Length; i++) // Finding the first tile set
+        for (int i = 0; i < tile.in_Out1.Length; i++) // Finding the first tile set
         {
-            if (tile.in_Out[i] == direction)
+            if (tile.in_Out1[i] == direction)
             {
                 found = true;
             }
@@ -69,11 +69,46 @@ public class FlowManager : MonoBehaviour {
 
     void nextTile()
     {
+        // Changes the sprite of the tile
         tile.GetComponent<SpriteRenderer>().sprite = gm.tileSprites[2];
 
-        switch (fromDirection)
+        if (fromDirection == tile.in_Out1[0])
         {
-            case 0: // From top
+            nextTileSorter(tile.in_Out1[1]);
+        }
+        else if (fromDirection == tile.in_Out1[1])
+        {
+            nextTileSorter(tile.in_Out1[0]);
+        }
+        else if (fromDirection == tile.in_Out2[0])
+        {
+            nextTileSorter(tile.in_Out2[1]);
+        }
+        else if (fromDirection == tile.in_Out2[1])
+        {
+            nextTileSorter(tile.in_Out2[0]);
+        }
+        else
+        {
+            Debug.Log("Player Failed");
+        }
+    }
+
+    // Gets the next tile to flow to
+    void nextTileSorter(int nextDir)
+    {
+        switch (nextDir)
+        {
+            case 0: // Up
+                if (tile.upB == true)
+                {
+                    currentTile[1] = currentTile[1] + 1;
+                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
+                    fromDirection = 2;
+                    flowing();
+                }
+                break;
+            case 1: // Right
                 if (tile.rightB == true)
                 {
                     currentTile[0] = currentTile[0] + 1;
@@ -81,104 +116,24 @@ public class FlowManager : MonoBehaviour {
                     fromDirection = 3;
                     flowing();
                 }
-                else if (tile.downB == true)
+                break;
+            case 2: // Down
+                if (tile.downB == true)
                 {
                     currentTile[1] = currentTile[1] - 1;
                     tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
                     fromDirection = 0;
                     flowing();
                 }
-                else if (tile.leftB == true)
+                break;
+            case 3: // Left
+                if (tile.leftB == true)
                 {
                     currentTile[0] = currentTile[0] - 1;
                     tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
                     fromDirection = 1;
                     flowing();
                 }
-                else
-                {
-                    Debug.Log("Player Failed");
-                }
-                break;
-            case 1: // From right
-                if (tile.upB == true)
-                {
-                    currentTile[1] = currentTile[1] + 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 2;
-                    flowing();
-                }
-                else if (tile.downB == true)
-                {
-                    currentTile[1] = currentTile[1] - 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 0;
-                    flowing();
-                }
-                else if (tile.leftB == true)
-                {
-                    currentTile[0] = currentTile[0] - 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 1;
-                    flowing();
-                }
-                else
-                {
-                    Debug.Log("Player Failed");
-                }
-                break;
-            case 2: // From bottom
-                if (tile.upB == true)
-                {
-                    currentTile[1] = currentTile[1] + 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 2;
-                    flowing();
-                }
-                else if (tile.leftB == true)
-                {
-                    currentTile[0] = currentTile[0] - 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 1;
-                    flowing();
-                }
-                else if (tile.rightB == true)
-                {
-                    currentTile[0] = currentTile[0] + 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 3;
-                    flowing();
-                }
-                else
-                {
-                    Debug.Log("Player Failed");
-                }
-                break;
-            case 3: // From Left
-                if (tile.upB == true)
-                {
-                    currentTile[1] = currentTile[1] + 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 2;
-                    flowing();
-                }
-                else if (tile.downB == true)
-                {
-                    currentTile[1] = currentTile[1] - 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 0;
-                    flowing();
-                }
-                else if (tile.rightB == true)
-                {
-                    currentTile[0] = currentTile[0] + 1;
-                    tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 3;
-                    flowing();
-                }
-                break;
-            default:
-                Debug.Log("Player Failed");
                 break;
         }
     }
@@ -200,9 +155,10 @@ public class FlowManager : MonoBehaviour {
 	
 	}
 
+    // Adds a delay
     IEnumerator nextMove()
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(1.0f);
         nextTile();
     }
 }

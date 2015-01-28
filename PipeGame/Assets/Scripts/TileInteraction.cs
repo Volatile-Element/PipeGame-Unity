@@ -23,7 +23,8 @@ public class TileInteraction : MonoBehaviour {
     //tileType is the sprite index number, used to identify the tile type later 
     public int tileType;
     // 0 is defaulted top side and 1 is defaulted left side
-    public int[] in_Out = { 0, 1 };
+    public int[] in_Out1 = { 0, 1 };
+    public int[] in_Out2 = { 2, 3 };
     // Holding the X and Y location of this script
     public int locX, locY;
     // Allows to check if side can be moved to
@@ -67,16 +68,7 @@ public class TileInteraction : MonoBehaviour {
 	}
 	
 
-	void Update () {
-
-        //if (runOnce == false)
-       // {
-            
-
-        //    runOnce = true;
-        //}
-	
-	}
+	void Update () {}
 
     //Rotates the tile 90 degrees on each call
     public void RotateTile()
@@ -92,17 +84,34 @@ public class TileInteraction : MonoBehaviour {
         }
 
         // Rotates the in out sides
-        for (int i = 0; i < in_Out.Length; i++ )
+        for (int i = 0; i < in_Out1.Length; i++ )
         {
-            if (in_Out[i] != 3)
+            if (in_Out1[i] != 3)
             {
-                in_Out[i]++;
+                in_Out1[i]++;
             }
             else
             {
-                in_Out[i] = 0;
+                in_Out1[i] = 0;
             }
         }
+
+        // Rotates the in out sides
+        if (in_Out2[0] != -1)
+        {
+            for (int i = 0; i < in_Out2.Length; i++)
+            {
+                if (in_Out2[i] != 3)
+                {
+                    in_Out2[i]++;
+                }
+                else
+                {
+                    in_Out2[i] = 0;
+                }
+            }
+        }
+
         //Rotates the tile 90 degrees
         gameObject.transform.Rotate(new Vector3(0, 0, -90));
 
@@ -147,16 +156,21 @@ public class TileInteraction : MonoBehaviour {
         leftB = false;
 
         // Cycles through the in out ports of the current tile
-        for (int i = 0; i < in_Out.Length; i++)
+        for (int i = 0; i < in_Out1.Length; i++)
         {
-            switch (in_Out[i])
+            switch (in_Out1[i])
             {
                 case 0: // Checks tile above to availability
                     if (locY + 1 < gm.boardSize) // Makes sure there is actually a tile to the left of this tile
                     {
-                        for (int upI = 0; upI < up.in_Out.Length; upI++) // Cycles through the tile to the top's in and out ports
+                        for (int upI = 0; upI < up.in_Out1.Length; upI++) // Cycles through the tile to the top's in and out ports
                         {
-                            if (up.in_Out[upI] == 2)
+                            if (up.in_Out1[upI] == 2)
+                            {
+                                upB = true; // Sets this tile is allowed to move items upwards
+                            }
+
+                            if (up.in_Out2[upI] == 2)
                             {
                                 upB = true; // Sets this tile is allowed to move items upwards
                             }
@@ -166,9 +180,14 @@ public class TileInteraction : MonoBehaviour {
                 case 1: // Checks tile to the right to availability
                     if (locX + 1 < gm.boardSize) // Makes sure there is actually a tile to the right of this tile
                     {
-                        for (int rightI = 0; rightI < right.in_Out.Length; rightI++) // Cycles through the tile to the right's in and out ports
+                        for (int rightI = 0; rightI < right.in_Out1.Length; rightI++) // Cycles through the tile to the right's in and out ports
                         {
-                            if (right.in_Out[rightI] == 3)
+                            if (right.in_Out1[rightI] == 3)
+                            {
+                                rightB = true; // Sets this tile is allowed to move items to the right
+                            }
+
+                            if (right.in_Out2[rightI] == 3)
                             {
                                 rightB = true; // Sets this tile is allowed to move items to the right
                             }
@@ -178,9 +197,14 @@ public class TileInteraction : MonoBehaviour {
                 case 2: // Checks tile below to availability
                     if (locY != 0) // Makes sure there is actually a tile below this tile
                     {
-                        for (int downI = 0; downI < down.in_Out.Length; downI++) // Cycles through the tile to the bottom's in and out ports
+                        for (int downI = 0; downI < down.in_Out1.Length; downI++) // Cycles through the tile to the bottom's in and out ports
                         {
-                            if (down.in_Out[downI] == 0)
+                            if (down.in_Out1[downI] == 0)
+                            {
+                                downB = true; // Sets this tile is allowed to move items downwards
+                            }
+
+                            if (down.in_Out2[downI] == 0)
                             {
                                 downB = true; // Sets this tile is allowed to move items downwards
                             }
@@ -190,15 +214,100 @@ public class TileInteraction : MonoBehaviour {
                 case 3: // Checks tile to the left to availability
                     if (locX != 0) // Makes sure there is actually a tile to the left of this tile
                     {
-                        for (int leftI = 0; leftI < left.in_Out.Length; leftI++) // Cycles through the tile to the left's in and out ports
+                        for (int leftI = 0; leftI < left.in_Out1.Length; leftI++) // Cycles through the tile to the left's in and out ports
                         {
-                            if (left.in_Out[leftI] == 1)
+                            if (left.in_Out1[leftI] == 1)
+                            {
+                                leftB = true; // Sets this tile is allowed to move items to the left
+                            }
+
+                            if (left.in_Out2[leftI] == 1)
                             {
                                 leftB = true; // Sets this tile is allowed to move items to the left
                             }
                         }
                     }
                     break;
+            }
+        }
+
+
+        // Cycles through the in out ports of the current tile
+        if (in_Out2[0] != -1) // Only runs when there is a second pipe on the tile
+        {
+            for (int i = 0; i < in_Out2.Length; i++)
+            {
+                switch (in_Out2[i])
+                {
+                    case 0: // Checks tile above to availability
+                        if (locY + 1 < gm.boardSize) // Makes sure there is actually a tile to the left of this tile
+                        {
+                            for (int upI = 0; upI < up.in_Out2.Length; upI++) // Cycles through the tile to the top's in and out ports
+                            {
+                                if (up.in_Out1[upI] == 2)
+                                {
+                                    upB = true; // Sets this tile is allowed to move items upwards
+                                }
+
+                                if (up.in_Out2[upI] == 2)
+                                {
+                                    upB = true; // Sets this tile is allowed to move items upwards
+                                }
+                            }
+                        }
+                        break;
+                    case 1: // Checks tile to the right to availability
+                        if (locX + 1 < gm.boardSize) // Makes sure there is actually a tile to the right of this tile
+                        {
+                            for (int rightI = 0; rightI < right.in_Out2.Length; rightI++) // Cycles through the tile to the right's in and out ports
+                            {
+                                if (right.in_Out1[rightI] == 3)
+                                {
+                                    rightB = true; // Sets this tile is allowed to move items to the right
+                                }
+
+                                if (right.in_Out2[rightI] == 3)
+                                {
+                                    rightB = true; // Sets this tile is allowed to move items to the right
+                                }
+                            }
+                        }
+                        break;
+                    case 2: // Checks tile below to availability
+                        if (locY != 0) // Makes sure there is actually a tile below this tile
+                        {
+                            for (int downI = 0; downI < down.in_Out2.Length; downI++) // Cycles through the tile to the bottom's in and out ports
+                            {
+                                if (down.in_Out1[downI] == 0)
+                                {
+                                    downB = true; // Sets this tile is allowed to move items downwards
+                                }
+
+                                if (down.in_Out2[downI] == 0)
+                                {
+                                    downB = true; // Sets this tile is allowed to move items downwards
+                                }
+                            }
+                        }
+                        break;
+                    case 3: // Checks tile to the left to availability
+                        if (locX != 0) // Makes sure there is actually a tile to the left of this tile
+                        {
+                            for (int leftI = 0; leftI < left.in_Out2.Length; leftI++) // Cycles through the tile to the left's in and out ports
+                            {
+                                if (left.in_Out1[leftI] == 1)
+                                {
+                                    leftB = true; // Sets this tile is allowed to move items to the left
+                                }
+
+                                if (left.in_Out2[leftI] == 1)
+                                {
+                                    leftB = true; // Sets this tile is allowed to move items to the left
+                                }
+                            }
+                        }
+                        break;
+                }
             }
         }
     }
