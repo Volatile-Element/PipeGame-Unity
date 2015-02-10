@@ -24,6 +24,7 @@ public class TileInteraction : MonoBehaviour {
     public int tileType;
     // 0 is defaulted top side and 1 is defaulted left side
     public int[] in_Out1 = { 0, 1 };
+    // Only used if the tile has a second pipe on the tile
     public int[] in_Out2 = { 2, 3 };
     // Holding the X and Y location of this script
     public int locX, locY;
@@ -34,6 +35,14 @@ public class TileInteraction : MonoBehaviour {
     public bool leftB = false;
 
     bool runOnce = false;
+
+    // Only used if the tile is a pump
+    public bool isPump = false;
+    public int pumpOut = 2;
+    public int pumpIns = 0;
+    int pumpNeeds = 2; // Determins how many inputs the pump needs to activate flow
+
+    public GameObject flowPrefab;
     
     TileInteraction up, right, down, left;
     GridManager gm;
@@ -46,6 +55,7 @@ public class TileInteraction : MonoBehaviour {
 
         gm = GameObject.Find("GridManager").GetComponent<GridManager>();
 
+        // Gets the GameObjects for the 4 directions, first checking if they are not off the board
         if (locY + 1 < gm.boardSize)
         {
             up = GameObject.Find("x:" + locX + " y:" + (locY + 1)).GetComponent<TileInteraction>();
@@ -68,7 +78,34 @@ public class TileInteraction : MonoBehaviour {
 	}
 	
 
-	void Update () {}
+	void Update () 
+    {
+        if (isPump == true)
+        {
+            if (pumpIns == pumpNeeds)
+            {
+                // Initializes a new flow from the pump outwards
+                // Setting the initial direction and tile
+                GameObject temp = Instantiate(flowPrefab) as GameObject;
+                temp.GetComponent<FlowManager>().startTile[0] = locX;
+                temp.GetComponent<FlowManager>().startTile[1] = locY;
+
+                if (pumpOut == 0 || pumpOut == 1)
+                {
+                    temp.GetComponent<FlowManager>().startDirection = pumpOut + 2; 
+                }
+                else if (pumpOut == 2)
+                {
+                    temp.GetComponent<FlowManager>().startDirection = 0;
+                }
+                else if (pumpOut == 3)
+                {
+                    temp.GetComponent<FlowManager>().startDirection = 1;
+                }
+            }
+        }
+         
+    }
 
     //Rotates the tile 90 degrees on each call
     public void RotateTile()
@@ -81,6 +118,19 @@ public class TileInteraction : MonoBehaviour {
         else
         {
             tileRotation = 0;
+        }
+
+        // Rotates the pump out direction only if tile is a pump
+        if (isPump == true)
+        {
+            if (pumpOut != 3)
+            {
+                pumpOut++;
+            }
+            else
+            {
+                pumpOut = 0;
+            }
         }
 
         // Rotates the in out sides
@@ -112,7 +162,7 @@ public class TileInteraction : MonoBehaviour {
             }
         }
 
-        //Rotates the tile 90 degrees
+        //Rotates the tile -90 degrees
         gameObject.transform.Rotate(new Vector3(0, 0, -90));
 
         // Updates this tiles available sides

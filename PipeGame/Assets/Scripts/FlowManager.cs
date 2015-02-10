@@ -13,6 +13,8 @@ public class FlowManager : MonoBehaviour {
     TileInteraction tile;
     GridManager gm;
 
+    bool canFlow = true;
+
     
     public void startFlow() // Starting the flow from the first tile
     {
@@ -61,10 +63,9 @@ public class FlowManager : MonoBehaviour {
         }
     }
 
-    void flowing()
+    void startflowPump(int startDir)
     {
-        Debug.Log("Next tile is X:" + currentTile[0] + " Y:" + currentTile[1]);
-        StartCoroutine(nextMove());
+
     }
 
     void nextTile()
@@ -104,8 +105,13 @@ public class FlowManager : MonoBehaviour {
                 {
                     currentTile[1] = currentTile[1] + 1;
                     tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 2;
-                    flowing();
+                    
+                    if (tile.isPump != true)
+                    {
+                        fromDirection = 2;
+                        Debug.Log("Next tile is X:" + currentTile[0] + " Y:" + currentTile[1]);
+                        StartCoroutine(nextMove());
+                    }
                 }
                 break;
             case 1: // Right
@@ -113,8 +119,13 @@ public class FlowManager : MonoBehaviour {
                 {
                     currentTile[0] = currentTile[0] + 1;
                     tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 3;
-                    flowing();
+
+                    if (tile.isPump != true)
+                    {
+                        fromDirection = 3;
+                        Debug.Log("Next tile is X:" + currentTile[0] + " Y:" + currentTile[1]);
+                        StartCoroutine(nextMove());
+                    }
                 }
                 break;
             case 2: // Down
@@ -122,8 +133,13 @@ public class FlowManager : MonoBehaviour {
                 {
                     currentTile[1] = currentTile[1] - 1;
                     tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 0;
-                    flowing();
+
+                    if (tile.isPump != true)
+                    {
+                        fromDirection = 0;
+                        Debug.Log("Next tile is X:" + currentTile[0] + " Y:" + currentTile[1]);
+                        StartCoroutine(nextMove());
+                    }
                 }
                 break;
             case 3: // Left
@@ -131,8 +147,13 @@ public class FlowManager : MonoBehaviour {
                 {
                     currentTile[0] = currentTile[0] - 1;
                     tile = GameObject.Find("x:" + currentTile[0] + " y:" + currentTile[1]).GetComponent<TileInteraction>();
-                    fromDirection = 1;
-                    flowing();
+
+                    if (tile.isPump != true)
+                    {
+                        fromDirection = 1;
+                        Debug.Log("Next tile is X:" + currentTile[0] + " Y:" + currentTile[1]);
+                        StartCoroutine(nextMove());
+                    }
                 }
                 break;
         }
