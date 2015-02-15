@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Level : MonoBehaviour {
-	public string[,] levelData;
+	public List<string> levelData = new List<string>();
 	
 	public int startNodeLoc;
 	public int endNodeLoc;
