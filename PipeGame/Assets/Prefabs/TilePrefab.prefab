@@ -54,6 +54,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileRotation: 0
   tileType: 0
+  in_Out: 0000000001000000
+  locX: 0
+  locY: 0
+  upB: 0
+  rightB: 0
+  downB: 0
+  leftB: 0
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -11,9 +11,11 @@ using System.Collections;
 public class PlayerInteractions : MonoBehaviour {
 
     GridManager gridManager;
+    FlowManager flowManager;
 
 	void Start () {
         gridManager = FindObjectOfType<GridManager>();
+        flowManager = FindObjectOfType<FlowManager>();
 	}
 	
 	void Update () {
@@ -40,6 +42,11 @@ public class PlayerInteractions : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.R))
         {
             RotateTile();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            flowManager.startFlow();
         }
 	
 	}
