@@ -11,7 +11,7 @@ public class ReadWrite : MonoBehaviour {
 
 	void Start() 
 	{
-		levelObject = new Level();
+		levelObject = FindObjectOfType<Level> ();
 		GetLevel (1);
 	}
 	
@@ -39,9 +39,9 @@ public class ReadWrite : MonoBehaviour {
 			if (currentChar == ',')
 			{
 				levelObject.levelData.Add(value);
-				Debug.Log(value);
 				value = "";
 				nextIsValue =false;
+				counter++;
 			}
 			if (currentChar == 'S')
 			{
@@ -54,12 +54,36 @@ public class ReadWrite : MonoBehaviour {
 			if (nextIsValue == true)
 			{
 				value += currentChar;
+				switch(currentChar)
+				{
+					case '1':
+						levelObject.numOfStraight++;
+						break;
+					case '2':
+						levelObject.numOfCorner++;
+						break;
+					case '3':
+						levelObject.numOfThree++;
+						break;
+					case '4':
+						levelObject.numOfFour++;
+						break;
+					case '5':
+						levelObject.numOfBridge++;
+						break;
+					case '6':
+						levelObject.numOfCornerBridge++;
+						break;
+					default:
+						break;
+				}
+
 			}
 			if (currentChar == ':')
 			{
 				nextIsValue = true; 
 			}
-			counter++;
+
 		}
 	}
 
