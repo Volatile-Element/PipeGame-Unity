@@ -9,12 +9,15 @@ public class ReadWrite : MonoBehaviour {
 	public string currentLevelData;
 	public Level levelObject;
 	public GridManager gmObject;
+	public MenuManager menuInstance;
+	public static string selection = "1";
 
 	void Start() 
 	{
 		levelObject = FindObjectOfType<Level> ();
 		gmObject = FindObjectOfType<GridManager> ();
-		GetLevel (1);
+		//selection = "1";
+		GetLevel ();
 	}
 	
 	// Update is called once per frame
@@ -23,11 +26,18 @@ public class ReadWrite : MonoBehaviour {
 		
 	}
 
-	public void GetLevel(int selection)
+	public void SetSelection()
 	{
+		//selection = menuInstance.choice;
+	}
+
+
+	public void GetLevel()
+	{
+		//SetSelection ();
+		Debug.Log ("Level " + selection);
 		currentLevelData = Resources.Load("Level " + selection).ToString();
 		Debug.Log (currentLevelData);
-
 		LevelBuilder ();
 	}
 
