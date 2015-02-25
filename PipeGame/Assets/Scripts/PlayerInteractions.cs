@@ -4,10 +4,24 @@ using System.Collections;
 /*
  * Copyright Volatile Element 2014
  * 
- * Handles all player interaction within the game
- * 
  * Put all click, touch or key actions in here
+ * 
+ * Methods:
+ * Start()
+ * Update()
+ * ClickActions()
+ * ChangeTile(int index)
+ * RotateTile()
+ * 
+ * Coders:
+ * Ashley Blake-Hood (Creator)
+ * Matthew Moore (Editor)
+ * 
  */
+
+/// <summary>
+/// Handles all player interaction within the game
+/// </summary>
 public class PlayerInteractions : MonoBehaviour {
 
     GridManager gridManager;
@@ -46,12 +60,14 @@ public class PlayerInteractions : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            flowManager.startFlow();
+            flowManager.StartFlow();
         }
 	
 	}
 
-    //Sets the active tile by Raycasting down
+    /// <summary>
+    /// Sets the active tile by Raycasting down
+    /// </summary>
     void ClickActions()
     {
         //Gets the collision between a physics ray and objects in the scene
@@ -61,13 +77,18 @@ public class PlayerInteractions : MonoBehaviour {
         gridManager.SetActiveTile(hit.collider.gameObject);
     }
 
-    //Changes the active tiles tile type, works on an index system, 0 is blank space
+    /// <summary>
+    /// Changes the active tiles tile type, works on an index system, 0 is blank space
+    /// </summary>
+    /// <param name="index"></param>
     void ChangeTile(int index)
     {
         gridManager.SetActiveTileSprite(index);
     }
 
-    //Rotates the active tile by 90 degrees for each press
+    /// <summary>
+    /// Rotates the active tile by 90 degrees for each press
+    /// </summary>
     void RotateTile()
     {
         gridManager.RotateActiveTile();

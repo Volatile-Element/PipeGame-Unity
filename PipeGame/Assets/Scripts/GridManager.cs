@@ -5,11 +5,27 @@ using System.Collections.Generic;
 /*
  * Copyright Volatile Element 2014
  * 
- * Generates and manages all of the tiles in the scene
+ * Methods:
+ * Start()
+ * Update()
+ * GenerateNewGrid(int size)
+ * SetActiveTile(GameObject tile)
+ * SetActiveTileSprite(int index)
+ * RotateActiveTile()
+ * FailedGame(string reason)
+ * WinGame(string reason)
  * 
- * Has functions to change the type and rotation of the currently selected tile
+ * Coders:
+ * Ashley Blake-Hood (Creator)
+ * Matthew Moore (Editor)
+ * 
  */
 
+/// <summary>
+/// Generates and manages all of the tiles in the scene
+/// Allows to change the type and rotation of the currently selected tile
+/// Allows for win and fail state to be called
+/// </summary>
 public class GridManager : MonoBehaviour {
 
     //tileSprites contains the images for all the available tile types
@@ -35,6 +51,9 @@ public class GridManager : MonoBehaviour {
 
     public int boardSize = 10;
 
+    public int[] winTile = { 9, 8 };
+    public int winDir = 1; // Direction for flow to flow off the final tile
+
 	void Start () {
         spriteSize = ((float)tileSprites[0].texture.width/100f);
         //Sample function call
@@ -45,7 +64,10 @@ public class GridManager : MonoBehaviour {
 	
 	}
 
-    //Generates a grid of size x size
+    /// <summary>
+    /// Generates a grid with passed size
+    /// </summary>
+    /// <param name="size">Size of grid to be generated</param>
     void GenerateNewGrid(int size)
     {
         for (int y = 0; y < size; y++)
@@ -70,7 +92,10 @@ public class GridManager : MonoBehaviour {
         gameObject.transform.position = new Vector2(-(spriteSize * size) / 2f, -(spriteSize * size) / 2f);
     }
 
-    //Used to change the reference to the active tile and move the marker
+    /// <summary>
+    /// Used to change the reference to the active tile and move the marker
+    /// </summary>
+    /// <param name="tile"></param>
     public void SetActiveTile(GameObject tile)
     {
         //Sets active tile to passed tile
@@ -84,16 +109,39 @@ public class GridManager : MonoBehaviour {
         activeTileInteraction = activeTile.GetComponent<TileInteraction>();
     }
 
-    //Sets the sprite of the selected tile by the passed index
+    /// <summary>
+    /// Sets the sprite of the selected tile by the passed index
+    /// </summary>
+    /// <param name="index"></param>
     public void SetActiveTileSprite(int index)
     {
         activeTile.GetComponent<SpriteRenderer>().sprite = tileSprites[index];
         activeTileInteraction.SetTileType(index);
     }
 
-    //Rotates selected tile 90 degrees
+    /// <summary>
+    /// Rotates selected tile 90 degrees
+    /// </summary>
     public void RotateActiveTile()
     {
         activeTileInteraction.RotateTile();
+    }
+
+    /// <summary>
+    /// Called whenever a failed state has been completed
+    /// </summary>
+    /// <param name="reason">Reason for fail (Mainly for Debugging)</param>
+    public void FailedGame(string reason)
+    {
+        Debug.Log("Player Failed " + reason);
+    }
+
+    /// <summary>
+    /// Called whenever a win state has been completed
+    /// </summary>
+    /// <param name="reason">Reason for win (Mainly for Debugging)</param>
+    public void WinGame(string reason)
+    {
+        Debug.Log("Player Won " + reason);
     }
 }

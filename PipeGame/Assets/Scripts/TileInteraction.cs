@@ -4,8 +4,6 @@ using System.Collections;
 /*
  * Copyright Volatile Element 2014
  * 
- * Stores data about the tile such as its Type and Rotation
- * 
  * Could be used to store the input/output points for the tile
  * for example you have 1/2/3/4 refering to each side, 1 and 2 have in/out
  * store that so when the liquid flows it knows what edges should be touching
@@ -13,8 +11,25 @@ using System.Collections;
  * then decide if the port next to each one is connected or not?
  * 
  * Has functions to set type and rotation 
+ * 
+ * Methods:
+ * Start()
+ * Update()
+ * FlowCreator(int dir)
+ * RotateTile()
+ * SetTileType(int index)
+ * UpdateSides()
+ * 
+ * Coders:
+ * Ashley Blake-Hood (Creator)
+ * Matthew Moore (Editor)
+ * 
  */
 
+/// <summary>
+/// Stores data about the tile such as its Type and Rotation
+/// Manages what type the tile is and creates new flows if required
+/// </summary>
 public class TileInteraction : MonoBehaviour {
 
     //tileRotation is a number between 0 and 3 inclusively
@@ -41,6 +56,15 @@ public class TileInteraction : MonoBehaviour {
     public int pumpOut = 2;
     public int pumpIns = 0;
     int pumpNeeds = 2; // Determins how many inputs the pump needs to activate flow
+
+    // Only used if the tile is a split pipe
+    public int splitWays = 2; // 2 for 3 way split, 3 for 4 way split
+    public bool splitIn = false; // Bool for if flow has hit split pipe
+    public bool splitOnce = false; // Bool to only create new flows if the split has been hit once
+    public int splitInFlow = -1; // Getting which side the flow enteres the split pipe
+    public int[] splitOut = { 1, 2, 3 };
+
+    public string tileTypeString = "Straight"; // Can be "Split" (3 way split & 4 way split), "Bridge" (Straight bridge & Corner Bridge) and "Straight" (Straight pipe & Corner Pipe)
 
     public GameObject flowPrefab;
     
@@ -77,37 +101,121 @@ public class TileInteraction : MonoBehaviour {
         }
 	}
 	
-
 	void Update () 
     {
         if (isPump == true)
         {
             if (pumpIns == pumpNeeds)
             {
-                // Initializes a new flow from the pump outwards
-                // Setting the initial direction and tile
-                GameObject temp = Instantiate(flowPrefab) as GameObject;
-                temp.GetComponent<FlowManager>().startTile[0] = locX;
-                temp.GetComponent<FlowManager>().startTile[1] = locY;
-
-                if (pumpOut == 0 || pumpOut == 1)
-                {
-                    temp.GetComponent<FlowManager>().startDirection = pumpOut + 2; 
-                }
-                else if (pumpOut == 2)
-                {
-                    temp.GetComponent<FlowManager>().startDirection = 0;
-                }
-                else if (pumpOut == 3)
-                {
-                    temp.GetComponent<FlowManager>().startDirection = 1;
-                }
+                FlowCreator(pumpOut);
             }
         }
-         
+        else if (tileTypeString == "Split")
+        {
+            if (splitOnce == false && splitIn == true)
+            {
+                switch(splitInFlow)
+                {
+                    case 0: // Up
+                        for (int i = 0; i < splitOut.Length; i++)
+                        {
+                            if (splitOut[i] != splitInFlow)
+                            {
+                                FlowCreator(splitOut[i]);
+                            }
+                        }
+                        break;
+                    case 1: // Right
+                        for (int i = 0; i < splitOut.Length; i++)
+                        {
+                            if (splitOut[i] != splitInFlow)
+                            {
+                                FlowCreator(splitOut[i]);
+                            }
+                        }
+                        break;
+                    case 2: // Down
+                        for (int i = 0; i < splitOut.Length; i++)
+                        {
+                            if (splitOut[i] != splitInFlow)
+                            {
+                                FlowCreator(splitOut[i]);
+                            }
+                        }
+                        break;
+                    case 3: // Left
+                        for (int i = 0; i < splitOut.Length; i++)
+                        {
+                            if (splitOut[i] != splitInFlow)
+                            {
+                                FlowCreator(splitOut[i]);
+                            }
+                        }
+                        break;
+                }
+                splitOnce = true;
+            }
+        }
     }
 
-    //Rotates the tile 90 degrees on each call
+    /// <summary>
+    /// Creates a new FlowManager and sets it flowing in the passed Direction
+    /// </summary>
+    /// <param name="dir">Direction to start the flow</param>
+    public void FlowCreator(int dir)
+    {
+        switch(dir)
+        {
+            case 0: // Up
+                    GameObject up = Instantiate(flowPrefab) as GameObject;
+                    up.name = locX + " " + (locY + 1);
+                    FlowManager fmUp = up.GetComponent<FlowManager>();
+                    fmUp.startTile[0] = locX;
+                    fmUp.startTile[1] = locY + 1;
+                    fmUp.startDirection = 0;
+                    fmUp.initialize();
+
+                    fmUp.StartFlow();
+                break;
+            case 1: // Right
+                    GameObject right = Instantiate(flowPrefab) as GameObject;
+                    right.name = (locX + 1) + " " + locY;
+                    FlowManager fmRight = right.GetComponent<FlowManager>();
+                    fmRight.startTile[0] = locX + 1;
+                    fmRight.startTile[1] = locY;
+                    fmRight.startDirection = 1;
+                    fmRight.initialize();
+
+                    fmRight.StartFlow();
+                break;
+            case 2: // Down
+                    GameObject down = Instantiate(flowPrefab) as GameObject;
+                    down.name = locX + " " + (locY - 1);
+                    FlowManager fmDown = down.GetComponent<FlowManager>();
+                    fmDown.startTile[0] = locX;
+                    fmDown.startTile[1] = locY - 1;
+                    fmDown.startDirection = 2;
+                    fmDown.initialize();
+
+                    fmDown.StartFlow();
+                break;
+            case 3: // Left
+                    GameObject left = Instantiate(flowPrefab) as GameObject;
+                    left.name = (locX - 1) + " " + locY;
+                    FlowManager fmLeft = left.GetComponent<FlowManager>();
+                    fmLeft.startTile[0] = locX - 1;
+                    fmLeft.startTile[1] = locY;
+                    fmLeft.startDirection = 3;
+                    fmLeft.initialize();
+
+                    fmLeft.StartFlow();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Rotates the current tile, changing the outputs, tile sprite and updates the sides for this tile and the four tiles around it
+    /// </summary>
     public void RotateTile()
     {
         //Sets tileRotation tracker to current angle
@@ -162,42 +270,63 @@ public class TileInteraction : MonoBehaviour {
             }
         }
 
+        // Rotates the split pipe in outs
+        if (splitOut[0] != -1)
+        {
+            for (int i = 0; i < splitOut.Length; i++)
+            {
+                if (splitOut[i] != 3)
+                {
+                    splitOut[i]++;
+                }
+                else
+                {
+                    splitOut[i] = 0;
+                }
+            }
+        }
+
         //Rotates the tile -90 degrees
         gameObject.transform.Rotate(new Vector3(0, 0, -90));
 
         // Updates this tiles available sides
-        updateSides();
+        UpdateSides();
 
         // Updates the available sides for the tiles around this tile and only if there is actually a tile in the corresponding direction
         if (locY + 1 < gm.boardSize)
         {
-            up.updateSides();
+            up.UpdateSides();
         }
 
         if (locX + 1 < gm.boardSize)
         {
-            right.updateSides();
+            right.UpdateSides();
         }
 
         if (locY != 0)
         {
-            down.updateSides();
+            down.UpdateSides();
         }
 
         if (locX != 0)
         {
-            left.updateSides();
+            left.UpdateSides();
         }
     }
 
-    //Sets tyleType to the current type index
+    /// <summary>
+    /// Sets tyleType to the current type index
+    /// </summary>
+    /// <param name="index"></param>
     public void SetTileType(int index)
     {
         tileType = index;
     }
 
-    // Updates bools to check if water can be pumped
-    public void updateSides()
+    /// <summary>
+    ///  Updates bools to check if water can be pumped for all sides
+    /// </summary>
+    public void UpdateSides()
     {
         // Resets all sides to allow for checking to be completed carefully
         upB = false;

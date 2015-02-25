@@ -54,13 +54,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileRotation: 0
   tileType: 0
-  in_Out: 0000000001000000
+  in_Out1: 0000000001000000
+  in_Out2: 0200000003000000
   locX: 0
   locY: 0
   upB: 0
   rightB: 0
   downB: 0
   leftB: 0
+  isPump: 0
+  pumpOut: 2
+  pumpIns: 0
+  splitWays: 2
+  splitIn: 0
+  splitOnce: 0
+  splitInFlow: -1
+  splitOut: 010000000200000003000000
+  tileTypeString: Bridge
+  flowPrefab: {fileID: 141154, guid: 31768ca3f441ad7488c732574ce1cf1d, type: 2}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

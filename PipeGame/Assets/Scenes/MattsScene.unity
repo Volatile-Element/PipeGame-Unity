@@ -443,6 +443,8 @@ MonoBehaviour:
   marker: {fileID: 1426235210}
   tilePrefab: {fileID: 100000, guid: 6bcfb9f93d688694fa480db8529c48e4, type: 2}
   boardSize: 10
+  winTile: 0900000008000000
+  winDir: 1
 --- !u!4 &1630041053
 Transform:
   m_ObjectHideFlags: 0
