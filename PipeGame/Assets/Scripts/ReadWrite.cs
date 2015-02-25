@@ -8,10 +8,12 @@ public class ReadWrite : MonoBehaviour {
 
 	public string currentLevelData;
 	public Level levelObject;
+	public GridManager gmObject;
 
 	void Start() 
 	{
 		levelObject = FindObjectOfType<Level> ();
+		gmObject = FindObjectOfType<GridManager> ();
 		GetLevel (1);
 	}
 	
@@ -85,6 +87,7 @@ public class ReadWrite : MonoBehaviour {
 			}
 
 		}
+
 	}
 
 }

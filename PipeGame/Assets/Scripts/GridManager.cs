@@ -35,10 +35,17 @@ public class GridManager : MonoBehaviour {
 
     public int boardSize = 10;
 
+	//Quick and dirty solution. Will come back to
+	public List<GameObject> gridObjects;
+
+	public Level levelInstance;
+
 	void Start () {
         spriteSize = ((float)tileSprites[0].texture.width/100f);
+		levelInstance = FindObjectOfType<Level> ();
         //Sample function call
         GenerateNewGrid(boardSize);
+
 	}
 	
 	void Update () {
@@ -64,10 +71,12 @@ public class GridManager : MonoBehaviour {
                 //Sets name and parent to clean up the editor inspectors
                 temp.name = string.Format("x:{0} y:{1}", x, y);
                 temp.transform.parent = gameObject.transform;
+				gridObjects.Add(temp);
             }
         }
         //Moves the entire grid so the middle tile is at the center of the view port
         gameObject.transform.position = new Vector2(-(spriteSize * size) / 2f, -(spriteSize * size) / 2f);
+		FillLevel ();
     }
 
     //Used to change the reference to the active tile and move the marker
@@ -89,6 +98,7 @@ public class GridManager : MonoBehaviour {
     {
         activeTile.GetComponent<SpriteRenderer>().sprite = tileSprites[index];
         activeTileInteraction.SetTileType(index);
+
     }
 
     //Rotates selected tile 90 degrees
@@ -96,4 +106,18 @@ public class GridManager : MonoBehaviour {
     {
         activeTileInteraction.RotateTile();
     }
+
+	//Fills the level with the loaded data from file
+	public void FillLevel()
+	{
+		int index;
+		GameObject currentTile;
+		for (int counter = 0; counter < gridObjects.Count; counter++) 
+		{
+			index = int.Parse(levelInstance.levelData[counter]);
+			currentTile = gridObjects[counter];
+			SetActiveTile(currentTile);
+			SetActiveTileSprite(index);
+		}
+	}
 }

@@ -377,6 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentLevelData: 
   levelObject: {fileID: 0}
+  gmObject: {fileID: 0}
 --- !u!4 &1274722273
 Transform:
   m_ObjectHideFlags: 0
@@ -468,12 +469,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileSprites:
-  - {fileID: 21300000, guid: a1053753846594f4cb82afd73d395e6c, type: 3}
-  - {fileID: 21300000, guid: 440e428c298a09941b893bf058780b36, type: 3}
-  - {fileID: 21300000, guid: 06382c4da44d04d43b5f8849f9707445, type: 3}
+  - {fileID: 21300000, guid: 06fdd95909fcc904a9394fe68c8005a6, type: 3}
+  - {fileID: 21300000, guid: 4c750451e333dd744ac6fe516c33165b, type: 3}
+  - {fileID: 21300000, guid: a8e25c8e529bd41409e4bca07f491ff6, type: 3}
+  - {fileID: 21300000, guid: 6197871c97b757d429bb0f38c267eb92, type: 3}
+  - {fileID: 21300000, guid: f3ba322128f35a749a5c33a2c3c96967, type: 3}
+  - {fileID: 21300000, guid: 309b35e6e7dac3244971e196e87dc2c6, type: 3}
+  - {fileID: 21300000, guid: 309b35e6e7dac3244971e196e87dc2c6, type: 3}
   marker: {fileID: 1426235210}
   tilePrefab: {fileID: 100000, guid: 6bcfb9f93d688694fa480db8529c48e4, type: 2}
   boardSize: 10
+  gridObjects: []
+  levelInstance: {fileID: 0}
 --- !u!4 &1630041053
 Transform:
   m_ObjectHideFlags: 0
